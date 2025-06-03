@@ -4,23 +4,25 @@ An AI-powered proctoring system assistant for proctors in monitoring and detecti
 
 ## Initial Setup
 
-When the application is first started, it will prompt you to configure required settings before proceeding:
+Before starting the application make sure that these are properly set-up first:
 
-1. **Roboflow API credentials**
+1. **Setup the Database**
+   - This application relies on using XAMPP MySQL for the database so you should have it set up first
+   - Setup XAMPP
+   - and import 'proctorai.sql' included with the package
+
+2. **In the admin interface (ProctorAI-ADMIN)**
+   - Add a proctor account
+   - Setup the Roboflow model
    - API key for model access
    - Project identifier
    - Model version
 
-2. **Model Class Definitions**
+3. **Model Class Definitions**
    - Check your Roboflow model's classes and put them in settings separated by commas"," without spaces
    - These define what the AI model detects
 
-3. **Database Settings**
-   - This application relies on using XAMPP MySQL for the database so you should have it set up first
-   - Connection parameters
-   - XAMPP MySQL credentials and database name
-
-Note: The application cannot start without these settings being properly configured. A settings dialog will appear automatically to guide you through this setup process.
+Note: The application cannot start without these settings being properly configured.
 
 ## Features
 
@@ -48,7 +50,7 @@ Note: The application cannot start without these settings being properly configu
 - Real-time detection overlays
 - Filter Bounding boxes seen in camera preview
 - You can select on what class/label you want for the application to capture (e.g. cheating)
-- Adjustable Confidence Threshold for the consideration of the examination environment
+- Adjustable Confidence Threshold for the detection sensitivity
 - Detection count tracking in status bar
 
 ### Report Management Feature

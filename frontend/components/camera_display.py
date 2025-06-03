@@ -8,8 +8,15 @@ from PyQt6.QtGui import QPixmap, QImage
 import cv2
 from backend.utils.gui.frame_display_manager import display_frame
 
+class CameraComboBox(QComboBox):
+    popup_shown = pyqtSignal()
+    def showPopup(self):
+        self.popup_shown.emit()
+        super().showPopup()
+
 class CameraDisplayDock(QDockWidget):
     camera_toggle_requested = pyqtSignal()
+    camera_combo_popup = pyqtSignal()
 
     def __init__(self, title, parent=None):
         super().__init__(title, parent)
@@ -31,13 +38,17 @@ class CameraDisplayDock(QDockWidget):
 
     def _setup_camera_controls(self, parent_layout):
         controls_layout = QHBoxLayout()
-        self.camera_combo = QComboBox()
+        self.camera_combo = CameraComboBox()
+        self.camera_combo.popup_shown.connect(self._on_camera_combo_popup)
         controls_layout.addWidget(QLabel("Select Camera:"))
         controls_layout.addWidget(self.camera_combo)
         self.camera_button = AnimatedStateButton("Start Camera")
         self.camera_button.clicked.connect(lambda: self.camera_toggle_requested.emit())
         controls_layout.addWidget(self.camera_button)
         parent_layout.addLayout(controls_layout)
+
+    def _on_camera_combo_popup(self):
+        self.camera_combo_popup.emit()
 
     def _setup_display_container(self, parent_layout):
         self.display_container = QFrame()

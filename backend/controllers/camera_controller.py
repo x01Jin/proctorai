@@ -48,6 +48,7 @@ class CameraManager(QObject):
         self.camera_devices = self.list_cameras()
         self.selected_camera = self.camera_devices[0] if self.camera_devices else ""
         self.main_window.camera_display.camera_combo.currentIndexChanged.connect(self.on_camera_selected)
+        self.main_window.camera_display.camera_combo_popup.connect(self.refresh_camera_list)
         self.camera_active = False
         self.thread_pool_manager = ThreadPoolManager()
         self.camera_process = None
@@ -68,6 +69,16 @@ class CameraManager(QObject):
         except Exception as e:
             logger.error(f"Failed to list cameras: {e}")
             return ["No cameras found"]
+
+    def refresh_camera_list(self):
+        devices = self.list_cameras()
+        self.camera_devices = devices
+        if self.selected_camera in devices:
+            index = devices.index(self.selected_camera)
+        else:
+            index = 0
+            self.selected_camera = devices[0] if devices else ""
+        self.main_window.camera_display.camera_combo.setCurrentIndex(index)
 
     def on_camera_selected(self, index):
         self.selected_camera = self.camera_devices[index]
