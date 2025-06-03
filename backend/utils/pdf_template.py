@@ -1,11 +1,19 @@
 import logging
 import os
+import sys
 from fpdf import FPDF
 from PIL import Image
 import tempfile
 
 REPORT_DIR_NAME = "ProctorAI-Report"
-WATERMARK_PATH = os.path.join("assets", "watermark.jpg")
+
+def get_watermark_path():
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(os.path.dirname(__file__))
+        base_path = os.path.join(base_path, '..', '..')
+    return os.path.join(base_path, "assets", "watermark.jpg")
 
 class PDFReport(FPDF):
     def __del__(self):
@@ -21,7 +29,7 @@ class PDFReport(FPDF):
 
     def prepare_transparent_watermark(self):
         if not hasattr(self, '_temp_watermark'):
-            with Image.open(WATERMARK_PATH) as img:
+            with Image.open(get_watermark_path()) as img:
                 img = img.convert('RGBA')
                 transparent = Image.new('RGBA', img.size, (255, 255, 255, 0))
                 blended = Image.blend(transparent, img, 0.50)
